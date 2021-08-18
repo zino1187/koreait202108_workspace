@@ -11,32 +11,34 @@
 </html>
 
 <script>
-var x=10; // 전역변수...언제까지 사나? 프로그램이 종료될때까지...
-
-function move(){
-	//문서내의 s라 불리는 녀석의 스타일 위치값 중 left를 점점 증가시키겟따!!
-	x+=10; //x=x+10
-	document.	getElementById("s").style.left=x+"px";
+//2015 년도에 발표된 ECMAScript(js의 명칭) 자바와 흡사한 class 를 지원 
+//화살 자체가 아닌, 장차 화살을 만들어 낼 수 있는 틀인 클래스를 정의해보자!!
+//OOP언어 = 객체지향 언어 = 객체가 중심이 되는 언어..
+class Arrow{
+	constructor(){ //ES에서는 생성자의 명칭이 정해져 있다...
+		this.s=document.getElementById("s");
+		//원하는 좌표로 이동
+		this.s.style.position="absolute"; //절대위치로 지정하겠다!!!
+		this.s.style.left=0+"px";
+		this.s.style.top=200+"px";
+		this.s.style.fontSize=30+"px";
+		this.s.style.color="red";
+		this.x=0;
+	}
+	move(){
+		//문서내의 s라 불리는 녀석의 스타일 위치값 중 left를 점점 증가시키겟따!!
+		this.x+=10; //x=x+10
+		this.s.style.left=this.x+"px";
+	}	
 }
 
-function init(){
-	/*이 영역은 디자인이 아닌 프로그래밍 영역이다!!*/
-	//문서 내의 span이라는 태그를 날려보자!!
-	var s=document.getElementById("s");
-
-	//원하는 좌표로 이동
-	s.style.position="absolute"; //절대위치로 지정하겠다!!!
-	s.style.left=0+"px";
-	s.style.top=200+"px";
-	s.style.fontSize=30+"px";
-	s.style.color="red";
-
-	//위의 모든 작업을 개발자가 원할때 수행시키자 
-}
-
+var a;
 //문서가 로드되면, 끄때 init() 하겠다...
 window.addEventListener("load", function(){
 	//alert("문서 로드 완료");
-	init();
+	a=new Arrow();
+
+	console.log(a);
 });
+
 </script>
