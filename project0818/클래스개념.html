@@ -5,12 +5,20 @@
 <title>클래스 개념</title>
 </head>
 <body>
-	<button onClick="alert('나 눌렀어?');">화살 날리기</button>
+	<button onClick="move()">화살 날리기</button>
 	<span id="s">→</span>
 </body>
 </html>
 
 <script>
+var x=10; // 전역변수...언제까지 사나? 프로그램이 종료될때까지...
+
+function move(){
+	//문서내의 s라 불리는 녀석의 스타일 위치값 중 left를 점점 증가시키겟따!!
+	x+=10; //x=x+10
+	document.	getElementById("s").style.left=x+"px";
+}
+
 function init(){
 	/*이 영역은 디자인이 아닌 프로그래밍 영역이다!!*/
 	//문서 내의 span이라는 태그를 날려보자!!
