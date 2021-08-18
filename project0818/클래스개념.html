@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>클래스 개념</title>
+</head>
+<body>
+	<span id="s">→</span>
+</body>
+</html>
+<script>
+function init(){
+	/*이 영역은 디자인이 아닌 프로그래밍 영역이다!!*/
+	//문서 내의 span이라는 태그를 날려보자!!
+	var s=document.getElementById("s");
+
+	//원하는 좌표로 이동
+	s.style.position="absolute"; //절대위치로 지정하겠다!!!
+	s.style.left=300+"px";
+	s.style.top=500+"px";
+
+	//위의 모든 작업을 개발자가 원할때 수행시키자 
+}
+
+//문서가 로드되면, 끄때 init() 하겠다...
+window.addEventListener("load", function(){
+	alert("문서 로드 완료");
+});
+</script>
