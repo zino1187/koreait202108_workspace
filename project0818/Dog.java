@@ -1,12 +1,5 @@
+//개발자가 정의한 클래스를 가리켜, 지금까지는 없었던 새로운 자료형이라 하여 
+//사용자 정의 자료형이라 한다!!
 class Dog{
-	int x=7;
-
-	public void test(){
-		x++;
-	}
-
-	public static void main(String[] args){
-		x++;
-		System.out.println(x);
-	}
+	int x=7;//x는 Dog의 멤버변수 이므로, Dog 이 태어나야 즉 인스턴스가 생성되어 야 접근가능..
 }

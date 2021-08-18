@@ -40,19 +40,23 @@ class Arrow{
 	}	
 }
 
-var a,b;
+var arr=[]; //js 배열 선언 
 
 function moveAll(){
 	//생성된 모든 화살을 움직여 보자!!!
-	a.move();
-	b.move();
+	for(var i=0;i<arr.length;i++){
+		arr[i].move();
+	}
+
+	setTimeout("moveAll()", 10); //  1000분의 10초 뒤에 moveAll호출
 }
 //문서가 로드되면, 끄때 init() 하겠다...
 window.addEventListener("load", function(){
 	//alert("문서 로드 완료");
-	a=new Arrow(100, 200, 2, "red");
-	b=new Arrow(250, 300, 15, "blue");
-
+	for(var i=0;i<2000;i++){
+		var a=new Arrow(100, i*50, i*2, "red");
+		arr.push(a); //기존배열에 요소를 추가!!
+	}
 });
 
 </script>

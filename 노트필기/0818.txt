@@ -1,0 +1,134 @@
+오라클 설치 시 주의점
+1.os 사용자명이 영문이어야 함 
+2.설치파일(installer )의 위치 또한 한글이 포함되지 않은 경로에 두고 설치하자..
+
+[ 버전 ]
+무료 버전 express 단어가 포함되어 있슴.. (학술적, 학교, 교육용...)
+용량이 약 4기가밖에 지원 안함...
+
+[ 서버 등의 시스템 종류는 대부분 서비스에 등록됨 ]
+서비스는 눈에보이지 않는 프로그램 즉 백그라운드에서 실행되는 프로그램 
+메모리를 많이 차지하므로, 수동으로 설정하여 필요할때만 가동하자!!
+
+[ 오라클 가동 ]
+1.이미 무료의 접속 클라이언트가 설치되어 있다.
+   - SQLPlus 프로그램을 이용하여 접속할 수 있다..
+   - cmd 모드에서 sqlplus 입력 
+
+2.접속방법
+sqlplus 에서 사용자명과 비번을 입력하여 접속하면 됨.
+오라클은 설치와 동시에 이미 관리자 계정이 지원됨...
+sys, system...
+
+
+sys/ as sysdba  로 접속하면 접속이 이상하게 성공? 된다....
+보안이 뚫린게 아니라, 윈도우 즉 os의 주인이 sqlplus를 접속할때는 비번없이도 들어갈수 잇게 해줌
+
+ [ 실습 화면 캡쳐 ]
+
+Microsoft Windows [Version 10.0.19042.1165]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\zino1>sqlplus
+
+SQL*Plus: Release 11.2.0.2.0 Production on 수 8월 18 16:21:37 2021
+
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+
+Enter user-name: sys
+Enter password:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Enter user-name: sys/ as sysdba
+Enter password:
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL> connect system/1234
+Connected.
+SQL> --데이터베이스를 생성하자
+SQL> create tablespace bigdata
+  2  datafile 'C:\oraclexe\app\oracle\oradata\XE\bigdata.dbf' size 5m;
+
+Tablespace created.
+
+SQL> -- db 의 사용자를 생성해보자
+SQL> create  user batman
+  2  identified by 1234
+  3  default tablespace bigdata
+  4  quota unlimited on bigdata;
+
+User created.
+
+SQL> --배트맨으로 접속해보자
+SQL> connect batman/1234
+ERROR:
+ORA-01045: user BATMAN lacks CREATE SESSION privilege; logon denied
+
+
+Warning: You are no longer connected to ORACLE.
+SQL> --접속 권한을 부여해보자
+SQL> show user
+USER is ""
+SQL> --접속을 다시  dba로 하자
+SQL> connect system/1234
+Connected.
+SQL> show user;
+USER is "SYSTEM"
+SQL> -- 권한을 부여해보자
+SQL> grant create session to batman;
+
+Grant succeeded.
+
+SQL> connect batman/1234
+Connected.
+SQL> create table member(
+  2  name char(20)
+  3  );
+create table member(
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges
+
+
+SQL> show user;
+USER is "BATMAN"
+SQL> connect system/1234
+Connected.
+SQL> show user
+USER is "SYSTEM"
+SQL> grant create table to batman;
+
+Grant succeeded.
+
+SQL> connect batman/1234
+Connected.
+SQL> create table member(
+  2  name char(20)
+  3  );
+
+Table created.
+
+SQL> connect system/1234
+Connected.
+SQL> grant create session, create table to batman;
+
+Grant succeeded.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
