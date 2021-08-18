@@ -14,19 +14,20 @@
 //화살 자체가 아닌, 장차 화살을 만들어 낼 수 있는 틀인 클래스를 정의해보자!!
 //OOP언어 = 객체지향 언어 = 객체가 중심이 되는 언어..
 class Arrow{
-	constructor(x , y, vel){ //ES에서는 생성자의 명칭이 정해져 있다...
+	constructor(x , y, vel, color){ //ES에서는 생성자의 명칭이 정해져 있다...
 		this.s=document.createElement("span"); //동적으로 즉 프로그래밍 적으로 생성
 		this.s.innerText="→"; // <span>→</span> 와 동일한 효과
 		this.x=x;
 		this.y=y;
 		this.vel=vel; //속도
+		this.color=color;
 
 		//원하는 좌표로 이동
 		this.s.style.position="absolute"; //절대위치로 지정하겠다!!!
 		this.s.style.left=this.x+"px";
 		this.s.style.top=this.y+"px";
 		this.s.style.fontSize=30+"px";
-		this.s.style.color="red";
+		this.s.style.color=this.color;
 
 		//생성된  span을  body에 자식요소로 붙이자!!
 		document.body.appendChild(this.s);
@@ -49,8 +50,8 @@ function moveAll(){
 //문서가 로드되면, 끄때 init() 하겠다...
 window.addEventListener("load", function(){
 	//alert("문서 로드 완료");
-	a=new Arrow(100, 200, 2);
-	b=new Arrow(250, 300, 15);
+	a=new Arrow(100, 200, 2, "red");
+	b=new Arrow(250, 300, 15, "blue");
 
 });
 
