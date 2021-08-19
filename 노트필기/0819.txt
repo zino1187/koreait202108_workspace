@@ -35,3 +35,60 @@ DML, DDL , DCL 은 ANSI 쿼리이기 때문에 모든 dBMS 에서 사용이 가능하다
      2) DML  : 데이터 조작어 insert, update , delete 
      3) DCL : 데이터 제어어   grant(권한부여) , revoke(권한뺏기)
 
+------------------------------------------------------------------------
+집계함수를 배워본다!!!
+SQL도 나름 언어이기에 연산자, 함수등이 지원된다...
+그 중 집계를 도출할때 사용되는 함수를 배워보자 
+(집계함수는 모든 DBMS 공통 함수 )
+
+총개수 count()
+ - select count(empno) from emp; 
+ - select count(empno) as 총사원수 from emp;
+  as 가짜이름, 별칭 등을 사용할 수 있는데 이러한 가짜 이름을 가리켜 alias 
+
+평균 avg(), 
+- select avg(sal) as 평균급여 from emp;
+
+최대값 max(), 
+- select max(sal) as 최대값 from emp;
+
+최소값 min() , 
+- select min(sal) as 최소값 from emp;
+
+합계.. sum()
+- select sum(sal) as 급여합 from emp;
+
+ --사원의 급여합, 최대급여, 최소급여, 평균급여를 출력하시오
+  select sum(sal) as 급여합 , max(sal) as 최대급여, min(sal) as 최소급여, avg(sal) as 평균급여
+  from emp;
+
+ 
+  [ 데이터 정렬하여 출력하기 ]
+  select * from emp order by sal desc; //내림차순
+  select * from emp order by sal asc; //오름차순 
+
+ [ 데이터를 그룹화 시키기]
+ group by 대상컬럼 
+
+ select deptno from emp group by deptno;
+ - group에 명시된 컬럼만이 제대로 된 데이터 이므로, group by에 명시된 컬럼만 select절에 사용할 수
+   있다.. 단 예외..집계함수는 group by 에 명시하지 않아도  select 의 대상이 될 수 있다..
+   왜?? 이미 그룹화된 것이기에...
+-----------------------------------------------------------------------------------------------
+
+평균급여보다 급여가 높은 사원의 이름, 급여를 출력하시오.. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
