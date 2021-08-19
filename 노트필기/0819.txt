@@ -78,8 +78,7 @@ SQL도 나름 언어이기에 연산자, 함수등이 지원된다...
 
 평균급여보다 급여가 높은 사원의 이름, 급여를 출력하시오.. 
 
-
-
+select ename, sal from emp where sal > ( select avg(sal) from emp );
 
 
 
