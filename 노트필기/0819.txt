@@ -1,0 +1,37 @@
+[ MySQL ]
+
+■ 현재 시스템에 존재하는 db 목록 
+show databases;
+
+■ 원하는  db 사용하기 
+use bigdata;
+
+■ 현재 사용중인  db에 존재하는 테이블을 조회
+show  tables;
+
+■ 데이터를 조작(insert, update, delete ) DML-Data Manipulation Language
+
+insert into emp(empno, ename,sal) values(7777,'ZINO',10000);
+
+delete from emp where empno=7839; // KING 삭제
+
+SCOTT보다 높은 급여를받는 사원을 삭제하기
+delete from emp where sal > (select sal from emp where ename='SCOTT');
+
+
+■  데이터베이스 정의어 (DDL : Database Definition Language) 
+   db생성  : Create 
+   변경  : Alter 
+   제거  : Drop 
+
+alter table emp
+drop column comm;
+
+drop table emp; //테이블 제거
+----------------------------------------------------------------------
+DML, DDL , DCL 은 ANSI 쿼리이기 때문에 모든 dBMS 에서 사용이 가능하다 
+--> 쿼리문의 유형 3가지 
+     1) DDL(Database Definition Langange) : 데이터 정의어  Create, Alter , Drop
+     2) DML  : 데이터 조작어 insert, update , delete 
+     3) DCL : 데이터 제어어   grant(권한부여) , revoke(권한뺏기)
+
