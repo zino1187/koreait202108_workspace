@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"com.koreait.member","c":"Smith","l":"getSal()"},{"p":"com.koreait.member","c":"Smith","l":"love(Dog)","url":"love(com.koreait.animal.Dog)"},{"p":"com.koreait.member","c":"Smith","l":"setSal(int)"},{"p":"com.koreait.member","c":"Smith","l":"Smith()","url":"%3Cinit%3E()"}]

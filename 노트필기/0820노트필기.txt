@@ -1,0 +1,8 @@
+src
+bin   <---- 클래스 패스의 루트로 삼자!!
+          장점)  어떤 위치에서건 bin이 보인다...
+path
+classpath
+
+javac   -d   bin위치  대상클래스파일.java
+java  패키지.클래스  대상클래스 

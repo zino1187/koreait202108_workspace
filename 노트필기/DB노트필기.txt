@@ -1,0 +1,329 @@
+[mysql 접속]
+mysql -h localhost -u root -p
+
+use bigdata; //db선택
+
+
+[ SQL의 3가지 유형 ]
+
+[select ]
+ - where 조건
+ - 서브쿼리 
+ - 정렬 order by  정렬대상컬럼명   
+    select * from emp order by sal asc
+ - 집계함수 (sum, avg, max, min, count ) 
+ - group by  
+
+1.DDL(데이터베이스 정의어: 탄생 create , 죽음 drop , 변경 alter ) - 존재와 관련
+
+ -제약(Constraint )조건	
+    테이블 생성(Create)시 데이터의 무결성(결점이 없슴)을 위해 안전장치를 마련할 수 있는데, 
+    테이블 생성시 부여하는 까다로운 조건을 가리켜 제약조건이라 한다...
+    (1)종류 
+
+	- unique : 중복을 허용하지는 않지만, null을 잡아내지는 못한다..
+	- not null
+	- primary key  : unique + not null + 자동증가 속성까지 부여 ( 주 키)
+	- default  : 기본값을 부여해준다 
+
+	- check  : 지정한 값만을 허용해 줌
+	- foreign key  
+
+2.DML(데이터 조작어: insert, update, delete )
+
+3.DCL(데이터베이스 제어어 : 권한부여(grant), 권한뺏기(revoke))  
+
+--실습 --------------------------------------------------------------------------------
+Microsoft Windows [Version 10.0.19042.1165]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\zino1>echo 민진호
+민진호
+
+C:\Users\zino1>echo classpath
+classpath
+
+C:\Users\zino1>echo %classpath%
+D:\koreait2108_workspace\project0820\bin;D:\koreait2108_workspace\app0819\bin;D:\koreait2108_workspace\testapp\bin;
+
+C:\Users\zino1>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 5.7.33-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use bigdata;
+Database changed
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| bigdata            |
+| minssam            |
+| momstay            |
+| mydb               |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.01 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_bigdata |
++-------------------+
+| dept              |
+| emp               |
+| family            |
++-------------------+
+3 rows in set (0.00 sec)
+
+mysql> create  table member(
+    -> name char(20)
+    -> , gender char(6)
+    -> , age int
+    -> ) default character set utf8;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> drop table member;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table member(
+    -> name varchar(20)
+    -> , gender varchar(6)
+    -> , age int
+    -> ) default character set utf8;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into member(name, gender,age) values('스미스','woman',35);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from member;
++--------+--------+------+
+| name   | gender | age  |
++--------+--------+------+
+| 스미스 | woman  |   35 |
++--------+--------+------+
+1 row in set (0.00 sec)
+
+mysql> insert into member(name, gender,age) values('배트맨','man',39);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from member;
++--------+--------+------+
+| name   | gender | age  |
++--------+--------+------+
+| 스미스 | woman  |   35 |
+| 배트맨 | man    |   39 |
++--------+--------+------+
+2 rows in set (0.00 sec)
+
+mysql> insert into member(name, gender,age) values('스미스','woman',35);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from member;
++--------+--------+------+
+| name   | gender | age  |
++--------+--------+------+
+| 스미스 | woman  |   35 |
+| 배트맨 | man    |   39 |
+| 스미스 | woman  |   35 |
++--------+--------+------+
+3 rows in set (0.00 sec)
+
+mysql> --배트맨 지우기
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-- 배트맨 지우기' at line 1
+mysql> delete from member where name='배트맨';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from member;
++--------+--------+------+
+| name   | gender | age  |
++--------+--------+------+
+| 스미스 | woman  |   35 |
+| 스미스 | woman  |   35 |
++--------+--------+------+
+2 rows in set (0.00 sec)
+
+mysql> --레코드 구분을 위한 숫자 컬럼을 이용해보자
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-- 레코드 구분을 위한 숫자 컬럼을 이용해보자' at line 1
+mysql> drop table member;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table member(
+    ->   member_id int
+    -> , name varchar(20)
+    -> , age int
+    -> , gender varchar(6)
+    -> ) default character set utf8;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert into member(member_id, name, age, gender)
+    -> values(1,'지노',30, 'man');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into member(member_id, name, age, gender)
+    -> values(2,'지노',30, 'man');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from member;
++-----------+------+------+--------+
+| member_id | name | age  | gender |
++-----------+------+------+--------+
+|         1 | 지노 |   30 | man    |
+|         2 | 지노 |   30 | man    |
++-----------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> insert into member(member_id, name, age, gender)
+    -> values(2,'지노',30, 'man');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from member;
++-----------+------+------+--------+
+| member_id | name | age  | gender |
++-----------+------+------+--------+
+|         1 | 지노 |   30 | man    |
+|         2 | 지노 |   30 | man    |
+|         2 | 지노 |   30 | man    |
++-----------+------+------+--------+
+3 rows in set (0.00 sec)
+
+mysql> drop table member;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create  table  member(
+    -> member_id int unique
+    -> , name varchar(20)
+    -> , age int
+    -> , gender varchar(6)
+    -> ) default character set utf8;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into member(member_id, name,age, gender)
+    -> values(1,'스미스',35,'woman');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into member(member_id, name,age, gender)
+    -> values(1,'스미스',35,'woman');
+ERROR 1062 (23000): Duplicate entry '1' for key 'member_id'
+mysql> insert into member(name,age, gender) values('zino',30,'man');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from member;
++-----------+--------+------+--------+
+| member_id | name   | age  | gender |
++-----------+--------+------+--------+
+|         1 | 스미스 |   35 | woman  |
+|      NULL | zino   |   30 | man    |
++-----------+--------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> insert into member(name,age, gender) values('zino',30,'man');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from member;
++-----------+--------+------+--------+
+| member_id | name   | age  | gender |
++-----------+--------+------+--------+
+|         1 | 스미스 |   35 | woman  |
+|      NULL | zino   |   30 | man    |
+|      NULL | zino   |   30 | man    |
++-----------+--------+------+--------+
+3 rows in set (0.00 sec)
+
+mysql> drop table member;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table member(
+    -> member_id int unique not null
+    -> , name varchar(20)
+    -> , age int
+    -> , gender varchar(6)
+    -> ) default character set utf8;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>
+mysql>
+mysql> insert into member(name,age, gender) values('zino',30,'man');
+ERROR 1364 (HY000): Field 'member_id' doesn't have a default value
+mysql>
+
+
+mysql> create table member(
+    -> member_id int primary key auto_increment
+    -> , name varchar(20)
+    -> , age int
+    -> , gender varchar(6)
+    -> ) default character set utf8;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> --primary key에 의해 중복X, null X, 자동증가 ...
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--primary key에 의해 중복X, null X, 자동증가 ...' at line 1
+mysql> insert into member(name, age, gender) values('zino',30,'man');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into member(name, age, gender) values('zino',30,'man');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from member;
++-----------+------+------+--------+
+| member_id | name | age  | gender |
++-----------+------+------+--------+
+|         1 | zino |   30 | man    |
+|         2 | zino |   30 | man    |
++-----------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> alter table member
+    -> add point default 500;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'default 500' at line 2
+mysql> alter table member
+    -> add point int default 500;
+Query OK, 0 rows affected (0.12 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into member(name, age, gender) values('zino',30,'man');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from member;
++-----------+------+------+--------+-------+
+| member_id | name | age  | gender | point |
++-----------+------+------+--------+-------+
+|         1 | zino |   30 | man    |   500 |
+|         2 | zino |   30 | man    |   500 |
+|         3 | zino |   30 | man    |   500 |
++-----------+------+------+--------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table member
+    -> add regdate timestamp defalut now();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'defalut now()' at line 2
+mysql> alter table member
+    -> add regdate timestamp default now();
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from member;
++-----------+------+------+--------+-------+---------------------+
+| member_id | name | age  | gender | point | regdate             |
++-----------+------+------+--------+-------+---------------------+
+|         1 | zino |   30 | man    |   500 | 2021-08-20 17:18:11 |
+|         2 | zino |   30 | man    |   500 | 2021-08-20 17:18:11 |
+|         3 | zino |   30 | man    |   500 | 2021-08-20 17:18:11 |
++-----------+------+------+--------+-------+---------------------+
+3 rows in set (0.00 sec)
+
+m
