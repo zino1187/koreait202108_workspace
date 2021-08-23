@@ -1,0 +1,655 @@
+SQL> --오라클, mysql 모든 db가 ANSI SQL지원하므로, 문법이 비슷
+SQL> --사용자 계정, 테이블명등을 조회하려면 시스템의 정보를 이용해야 하는데,
+SQL> --오라클 에서는 이와같은 시스템 정보를 딕셔너리라 불리는 객체들에 담고 있다.
+SQL> --이 객체들이 수백여가지다
+SQL> --Tip) 명명규칙이 어느정보 먹힘 예) dba_~~, user_~~
+SQL> select * from dba_users;                             
+                                                                                
+
+22 rows selected.
+
+SQL> --너무나 컬럼이 많아서 화면이 식별불가 , 딱 원하는 컬럼만 가져오자
+SQL> --그러기위해서는 먼저 테이블의 구조부터 조사하자 (컬럼명조사)
+SQL> desc dba_users;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USERNAME                                  NOT NULL VARCHAR2(30)
+ USER_ID                                   NOT NULL NUMBER
+ PASSWORD                                           VARCHAR2(30)
+ ACCOUNT_STATUS                            NOT NULL VARCHAR2(32)
+ LOCK_DATE                                          DATE
+ EXPIRY_DATE                                        DATE
+ DEFAULT_TABLESPACE                        NOT NULL VARCHAR2(30)
+ TEMPORARY_TABLESPACE                      NOT NULL VARCHAR2(30)
+ CREATED                                   NOT NULL DATE
+ PROFILE                                   NOT NULL VARCHAR2(30)
+ INITIAL_RSRC_CONSUMER_GROUP                        VARCHAR2(30)
+ EXTERNAL_NAME                                      VARCHAR2(4000)
+ PASSWORD_VERSIONS                                  VARCHAR2(8)
+ EDITIONS_ENABLED                                   VARCHAR2(1)
+ AUTHENTICATION_TYPE                                VARCHAR2(8)
+
+SQL> select username from dba_users;
+
+USERNAME                                                                        
+------------------------------------------------------------                    
+BATMAN                                                                          
+WEBMASTER                                                                       
+JAVASE                                                                          
+NODE                                                                            
+ADAM                                                                            
+FRONT                                                                           
+HR                                                                              
+ANONYMOUS                                                                       
+FLOWS_FILES                                                                     
+APEX_040000                                                                     
+MDSYS                                                                           
+
+USERNAME                                                                        
+------------------------------------------------------------                    
+CTXSYS                                                                          
+DBSNMP                                                                          
+XDB                                                                             
+APPQOSSYS                                                                       
+SYS                                                                             
+SYSTEM                                                                          
+APEX_PUBLIC_USER                                                                
+OUTLN                                                                           
+DIP                                                                             
+ORACLE_OCM                                                                      
+XS$NULL                                                                         
+
+22 rows selected.
+
+SQL> --계정명은 조사햇으나, 모르고 비번을 까먹었다...
+SQL> --해결책) 현재 계정이 관리자 계정이므로, 비번을 바꿔버리자
+SQL> --현재 내가 누군지?
+SQL> show user;
+USER is "SYSTEM"
+SQL> alter user batman
+  2  identified by 1234;
+
+User altered.
+
+SQL> --배트맨으로 접속해보기
+SQL> --이미 어떤 계정으로 오라클에 접속이 되어 있을때는 , 접속을 전환해야 하므로,
+SQL> --connect 를 사용한다 conn 줄여쓸수도 있다..
+SQL> conn batman/1234
+Connected.
+SQL> --현재 배트맨 계정으로 생성된 테이블들을 조회?
+SQL> --여전히 딕셔너리들을 사용하면 된다.. 관리자 dba_ 로 시작, 일반계정 user_로 시작
+SQL> desc user_tables;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TABLE_NAME                                NOT NULL VARCHAR2(30)
+ TABLESPACE_NAME                                    VARCHAR2(30)
+ CLUSTER_NAME                                       VARCHAR2(30)
+ IOT_NAME                                           VARCHAR2(30)
+ STATUS                                             VARCHAR2(8)
+ PCT_FREE                                           NUMBER
+ PCT_USED                                           NUMBER
+ INI_TRANS                                          NUMBER
+ MAX_TRANS                                          NUMBER
+ INITIAL_EXTENT                                     NUMBER
+ NEXT_EXTENT                                        NUMBER
+ MIN_EXTENTS                                        NUMBER
+ MAX_EXTENTS                                        NUMBER
+ PCT_INCREASE                                       NUMBER
+ FREELISTS                                          NUMBER
+ FREELIST_GROUPS                                    NUMBER
+ LOGGING                                            VARCHAR2(3)
+ BACKED_UP                                          VARCHAR2(1)
+ NUM_ROWS                                           NUMBER
+ BLOCKS                                             NUMBER
+ EMPTY_BLOCKS                                       NUMBER
+ AVG_SPACE                                          NUMBER
+ CHAIN_CNT                                          NUMBER
+ AVG_ROW_LEN                                        NUMBER
+ AVG_SPACE_FREELIST_BLOCKS                          NUMBER
+ NUM_FREELIST_BLOCKS                                NUMBER
+ DEGREE                                             VARCHAR2(40)
+ INSTANCES                                          VARCHAR2(40)
+ CACHE                                              VARCHAR2(20)
+ TABLE_LOCK                                         VARCHAR2(8)
+ SAMPLE_SIZE                                        NUMBER
+ LAST_ANALYZED                                      DATE
+ PARTITIONED                                        VARCHAR2(3)
+ IOT_TYPE                                           VARCHAR2(12)
+ TEMPORARY                                          VARCHAR2(1)
+ SECONDARY                                          VARCHAR2(1)
+ NESTED                                             VARCHAR2(3)
+ BUFFER_POOL                                        VARCHAR2(7)
+ FLASH_CACHE                                        VARCHAR2(7)
+ CELL_FLASH_CACHE                                   VARCHAR2(7)
+ ROW_MOVEMENT                                       VARCHAR2(8)
+ GLOBAL_STATS                                       VARCHAR2(3)
+ USER_STATS                                         VARCHAR2(3)
+ DURATION                                           VARCHAR2(15)
+ SKIP_CORRUPT                                       VARCHAR2(8)
+ MONITORING                                         VARCHAR2(3)
+ CLUSTER_OWNER                                      VARCHAR2(30)
+ DEPENDENCIES                                       VARCHAR2(8)
+ COMPRESSION                                        VARCHAR2(8)
+ COMPRESS_FOR                                       VARCHAR2(12)
+ DROPPED                                            VARCHAR2(3)
+ READ_ONLY                                          VARCHAR2(3)
+ SEGMENT_CREATED                                    VARCHAR2(3)
+ RESULT_CACHE                                       VARCHAR2(7)
+
+SQL> --현재 계정이 보유한 테이블 목록 조회
+SQL>  select TABLE_NAME from user_tables;
+
+TABLE_NAME                                                                      
+------------------------------------------------------------                    
+MEMBER                                                                          
+DEPT                                                                            
+EMP                                                                             
+
+SQL> --제약조건 (데이터의 무결성을 위해 컬럼에 가하는 제한 사항-즉 까다롭게 데이터를 받아들이겟다...)
+SQL> --본 실습에서는 이력서의 id에 primary key 를 적용하고, 동시에 이 pk값은 시퀀스객체로부터 얻어와
+SQL> --채워넣겟다..
+SQL> create table resume(
+  2  sdfsadf;
+sdfsadf
+      *
+ERROR at line 2:
+ORA-00907: missing right parenthesis 
+
+
+SQL> --cmd창은 커서 이동이 불가하기 때문에 오라클을 보다 편하게 편집하기 위한 편집기를 SQLPLUS가
+SQL> --지원하며, 이 편집기를 호출하기 위해서는 ed 또는 Edit라고 치면 된다
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table resume(
+  2    resume_id  number primary key
+  3   , name varchar(20)
+  4   , age number default 0
+  5   , gender  varchar(4)
+  6* )
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table resume(
+  2    resume_id  number primary key
+  3   , name varchar(20)
+  4   , age number default 0
+  5   , gender  varchar(4)
+  6* )
+SQL> /
+
+Table created.
+
+SQL> --오라클은 MySQL, MSSQL 처럼 컬럼 자체적으로 숫자값을 자동으로 증가시키는 속성이 없다.
+SQL> --별도의 시퀀스 객체로  pk를 넣어야 한다..
+SQL> --grant create session, create table to batman;
+SQL> create sequence seq_resume
+  2  increment by 1
+  3  start with 1;
+create sequence seq_resume
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+SQL> --어드민으로 다시 가자...알맞는 권한을 부여하자
+SQL> conn system/1234
+Connected.
+SQL> show user;
+USER is "SYSTEM"
+SQL> --DCL중 grant 로 권한을 줘보자
+SQL> grant create  sequence to batman;
+
+Grant succeeded.
+
+SQL> --다시 배트맨으로...
+SQL> conn batman/1234
+Connected.
+SQL> show user;
+USER is "BATMAN"
+SQL> --시퀀스 생성하기
+SQL> create  sequence seq_resume
+  2  increment 1
+  3  start with 1;
+increment 1
+          *
+ERROR at line 2:
+ORA-00924: missing BY keyword 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  sequence seq_resume
+  2  increment by 1
+  3* start with 1
+SQL> /
+
+Sequence created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  sequence seq_resume
+  2  increment by 1
+  3* start with 1
+SQL> --시퀀스 지우기 (DDL)
+SQL> drop sequence seq_resume;
+
+Sequence dropped.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  sequence  seq_resume
+  2  increment by 1
+  3* start with 1
+SQL> /
+
+Sequence created.
+
+SQL> --만일 어떤 시퀀스를 만들었는지 조회... 딕셔너리 조회 (시스템 정보 테이블 )
+SQL> desc user_sequences;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SEQUENCE_NAME                             NOT NULL VARCHAR2(30)
+ MIN_VALUE                                          NUMBER
+ MAX_VALUE                                          NUMBER
+ INCREMENT_BY                              NOT NULL NUMBER
+ CYCLE_FLAG                                         VARCHAR2(1)
+ ORDER_FLAG                                         VARCHAR2(1)
+ CACHE_SIZE                                NOT NULL NUMBER
+ LAST_NUMBER                               NOT NULL NUMBER
+
+SQL> select SEQUENCE_NAME from user_sequences;
+
+SEQUENCE_NAME                                                                   
+------------------------------------------------------------                    
+SEQ_RESUME                                                                      
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert  into resume(resume_id, name, age, gender) values(seq_resume.nextval, 'zino', 30, '??)
+SQL> /
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert  into resume(resume_id, name, age, gender) values(seq_resume.nextval, 'zino', 30, '??)
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert  into resume(resume_id, name, age, gender) values(seq_resume.nextval, 'zino', 30, 'man')
+SQL> /
+
+1 row created.
+
+SQL> select * from resume;
+
+ RESUME_ID NAME                                            AGE GENDER           
+---------- ---------------------------------------- ---------- --------         
+         1 zino                                             30 man              
+
+SQL> --데이터의 중복때문에 어쩔수 없이 하나의 테이블에서, 분리시켜 별도의 독립된 테이블로
+SQL> --가족을 존재시키자
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table  family(
+  2    family_id  number primary key 
+  3    , name varchar(25)
+  4    , age number 
+  5    , job  varchar(25)
+  6    , resume_id number
+  7* )
+SQL> /
+
+Table created.
+
+SQL> -- family에 사용할 시퀀스 생성
+SQL> create sequence  seq_family
+  2  increment by 1
+  3  start with 1;
+
+Sequence created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create sequence  seq_family
+  2  increment by 1
+  3* start with 1
+SQL> insert into family(family_id, resume_id, name, age, job) values(seq_family.nextval,1,'spiderman',78,'police');
+
+1 row created.
+
+SQL> insert into family(family_id, resume_id, name, age, job) values(seq_family.nextval,1,'superman',68,'teacher');
+
+1 row created.
+
+SQL> insert into family(family_id, resume_id, name, age, job) values(seq_family.nextval,1,'antman',45,'student');
+
+1 row created.
+
+SQL> insert into family(family_id, resume_id, name, age, job) values(seq_family.nextval,1,'wonder',35,'driver');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from family;
+
+ FAMILY_ID NAME                                                      AGE        
+---------- -------------------------------------------------- ----------        
+JOB                                                 RESUME_ID                   
+-------------------------------------------------- ----------                   
+         1 spiderman                                                  78        
+police                                                      1                   
+                                                                                
+         2 superman                                                   68        
+teacher                                                     1                   
+                                                                                
+         3 antman                                                     45        
+student                                                     1                   
+                                                                                
+
+ FAMILY_ID NAME                                                      AGE        
+---------- -------------------------------------------------- ----------        
+JOB                                                 RESUME_ID                   
+-------------------------------------------------- ----------                   
+         4 wonder                                                     35        
+driver                                                      1                   
+                                                                                
+
+SQL> --SQLPlus 툴의 툴 자체 명령어를 이용하면 화면을 조절할 수 있다..(주의 쿼리문 아님)
+SQL> set line 200
+SQL> /
+
+ FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                  
+---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                  
+         1 spiderman                                                  78 police                                                      1                                                                  
+         2 superman                                                   68 teacher                                                     1                                                                  
+         3 antman                                                     45 student                                                     1                                                                  
+         4 wonder                                                     35 driver                                                      1                                                                  
+
+SQL> set line 300
+SQL> /
+
+ FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                      
+---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                      
+         1 spiderman                                                  78 police                                                      1                                                                                                                                                                      
+         2 superman                                                   68 teacher                                                     1                                                                                                                                                                      
+         3 antman                                                     45 student                                                     1                                                                                                                                                                      
+         4 wonder                                                     35 driver                                                      1                                                                                                                                                                      
+
+SQL> /
+
+ FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                      
+---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                      
+         1 spiderman                                                  78 police                                                      1                                                                                                                                                                      
+         2 superman                                                   68 teacher                                                     1                                                                                                                                                                      
+         3 antman                                                     45 student                                                     1                                                                                                                                                                      
+         4 wonder                                                     35 driver                                                      1                                                                                                                                                                      
+
+SQL> set line 400
+SQL> /
+
+ FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                                                                                                                          
+---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                                                                                                                          
+         1 spiderman                                                  78 police                                                      1                                                                                                                                                                                                                                                                          
+         2 superman                                                   68 teacher                                                     1                                                                                                                                                                                                                                                                          
+         3 antman                                                     45 student                                                     1                                                                                                                                                                                                                                                                          
+         4 wonder                                                     35 driver                                                      1                                                                                                                                                                                                                                                                          
+
+SQL> /
+
+ FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                                                                                                                          
+---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                                                                                                                          
+         1 spiderman                                                  78 police                                                      1                                                                                                                                                                                                                                                                          
+         2 superman                                                   68 teacher                                                     1                                                                                                                                                                                                                                                                          
+         3 antman                                                     45 student                                                     1                                                                                                                                                                                                                                                                          
+         4 wonder                                                     35 driver                                                      1                                                                                                                                                                                                                                                                          
+
+SQL> set line 300
+SQL> /
+
+ FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                      
+---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                      
+         1 spiderman                                                  78 police                                                      1                                                                                                                                                                      
+         2 superman                                                   68 teacher                                                     1                                                                                                                                                                      
+         3 antman                                                     45 student                                                     1                                                                                                                                                                      
+         4 wonder                                                     35 driver                                                      1                                                                                                                                                                      
+
+SQL> --데이터 관리목적상 안좋은 중복된 데이터 때문에, 정규화에 의해 분리된 테이블을 다시 합칠수 있는 방법을
+SQL> --배워본다   (Join)
+SQL> ed
+Wrote file afiedt.buf
+
+  1  select *
+  2* from resume , family
+SQL> /
+
+ RESUME_ID NAME                                            AGE GENDER    FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                              
+---------- ---------------------------------------- ---------- -------- ---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                              
+         1 zino                                             30 man               1 spiderman                                                  78 police                                                      1                                                                                              
+         1 zino                                             30 man               2 superman                                                   68 teacher                                                     1                                                                                              
+         1 zino                                             30 man               3 antman                                                     45 student                                                     1                                                                                              
+         1 zino                                             30 man               4 wonder                                                     35 driver                                                      1                                                                                              
+
+SQL> set line 350
+SQL> /
+
+ RESUME_ID NAME                                            AGE GENDER    FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                
+---------- ---------------------------------------- ---------- -------- ---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                
+         1 zino                                             30 man               1 spiderman                                                  78 police                                                      1                                                                                                                                                
+         1 zino                                             30 man               2 superman                                                   68 teacher                                                     1                                                                                                                                                
+         1 zino                                             30 man               3 antman                                                     45 student                                                     1                                                                                                                                                
+         1 zino                                             30 man               4 wonder                                                     35 driver                                                      1                                                                                                                                                
+
+SQL> set line 450
+SQL> /
+
+ RESUME_ID NAME                                            AGE GENDER    FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                                                                                                    
+---------- ---------------------------------------- ---------- -------- ---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                                                                                                    
+         1 zino                                             30 man               1 spiderman                                                  78 police                                                      1                                                                                                                                                                                                                                                    
+         1 zino                                             30 man               2 superman                                                   68 teacher                                                     1                                                                                                                                                                                                                                                    
+         1 zino                                             30 man               3 antman                                                     45 student                                                     1                                                                                                                                                                                                                                                    
+         1 zino                                             30 man               4 wonder                                                     35 driver                                                      1                                                                                                                                                                                                                                                    
+
+SQL> set line 500
+SQL> /
+
+ RESUME_ID NAME                                            AGE GENDER    FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                                                                                                                                                      
+---------- ---------------------------------------- ---------- -------- ---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               1 spiderman                                                  78 police                                                      1                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               2 superman                                                   68 teacher                                                     1                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               3 antman                                                     45 student                                                     1                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               4 wonder                                                     35 driver                                                      1                                                                                                                                                                                                                                                                                                      
+
+SQL> /
+
+ RESUME_ID NAME                                            AGE GENDER    FAMILY_ID NAME                                                      AGE JOB                                                 RESUME_ID                                                                                                                                                                                                                                                                                                      
+---------- ---------------------------------------- ---------- -------- ---------- -------------------------------------------------- ---------- -------------------------------------------------- ----------                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               1 spiderman                                                  78 police                                                      1                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               2 superman                                                   68 teacher                                                     1                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               3 antman                                                     45 student                                                     1                                                                                                                                                                                                                                                                                                      
+         1 zino                                             30 man               4 wonder                                                     35 driver                                                      1                                                                                                                                                                                                                                                                                                      
+
+SQL> --조인을 사원과 부서 테이블로 학습해보자
+SQL> select * from dept;
+
+    DEPTNO DNAME                        LOC                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+---------- ---------------------------- --------------------------                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+        10 ACCOUNTING                   NEW YORK                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        20 RESEARCH                     DALLAS                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        30 SALES                        CHICAGO                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+        40 OPERATIONS                   BOSTON                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+SQL> select * from emp;
+
+     EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                                                                                             
+---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                                                                                             
+      7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7499 ALLEN                SALESMAN                 7698 81/02/20       1600        300         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7521 WARD                 SALESMAN                 7698 81/02/22       1250        500         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7566 JONES                MANAGER                  7839 81/04/02       2975                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7654 MARTIN               SALESMAN                 7698 81/09/28       1250       1400         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7782 CLARK                MANAGER                  7839 81/06/09       2450                    10                                                                                                                                                                                                                                                                                                                                                                                                             
+      7788 SCOTT                ANALYST                  7566 87/04/19       3000                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7839 KING                 PRESIDENT                     81/11/17       5000                    10                                                                                                                                                                                                                                                                                                                                                                                                             
+      7844 TURNER               SALESMAN                 7698 81/09/08       1500          0         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7876 ADAMS                CLERK                    7788 87/05/23       1100                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+
+     EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                                                                                             
+---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                                                                                             
+      7900 JAMES                CLERK                    7698 81/12/03        950                    30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7902 FORD                 ANALYST                  7566 81/12/03       3000                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7934 MILLER               CLERK                    7782 82/01/23       1300                    10                                                                                                                                                                                                                                                                                                                                                                                                             
+
+14 rows selected.
+
+SQL> -- SQLPluS의 pagesize 속성하여 한 페이지당 보여질 레코드 수를 늘려본다
+SQL> set pagesize 20
+SQL> select * from dept;
+
+    DEPTNO DNAME                        LOC                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+---------- ---------------------------- --------------------------                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+        10 ACCOUNTING                   NEW YORK                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        20 RESEARCH                     DALLAS                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        30 SALES                        CHICAGO                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+        40 OPERATIONS                   BOSTON                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+SQL> select * from emp;
+
+     EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                                                                                             
+---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                                                                                             
+      7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7499 ALLEN                SALESMAN                 7698 81/02/20       1600        300         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7521 WARD                 SALESMAN                 7698 81/02/22       1250        500         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7566 JONES                MANAGER                  7839 81/04/02       2975                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7654 MARTIN               SALESMAN                 7698 81/09/28       1250       1400         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7782 CLARK                MANAGER                  7839 81/06/09       2450                    10                                                                                                                                                                                                                                                                                                                                                                                                             
+      7788 SCOTT                ANALYST                  7566 87/04/19       3000                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7839 KING                 PRESIDENT                     81/11/17       5000                    10                                                                                                                                                                                                                                                                                                                                                                                                             
+      7844 TURNER               SALESMAN                 7698 81/09/08       1500          0         30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7876 ADAMS                CLERK                    7788 87/05/23       1100                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7900 JAMES                CLERK                    7698 81/12/03        950                    30                                                                                                                                                                                                                                                                                                                                                                                                             
+      7902 FORD                 ANALYST                  7566 81/12/03       3000                    20                                                                                                                                                                                                                                                                                                                                                                                                             
+      7934 MILLER               CLERK                    7782 82/01/23       1300                    10                                                                                                                                                                                                                                                                                                                                                                                                             
+
+14 rows selected.
+
+SQL> --부서와 사원테이블을 합쳐서 보여주자 !!
+SQL> ed
+Wrote file afiedt.buf
+
+  1  select *
+  2* from dept , emp
+SQL> /
+
+    DEPTNO DNAME                        LOC                             EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                          
+---------- ---------------------------- -------------------------- ---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7499 ALLEN                SALESMAN                 7698 81/02/20       1600        300         30                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7521 WARD                 SALESMAN                 7698 81/02/22       1250        500         30                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7566 JONES                MANAGER                  7839 81/04/02       2975                    20                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7654 MARTIN               SALESMAN                 7698 81/09/28       1250       1400         30                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7782 CLARK                MANAGER                  7839 81/06/09       2450                    10                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7788 SCOTT                ANALYST                  7566 87/04/19       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7839 KING                 PRESIDENT                     81/11/17       5000                    10                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7844 TURNER               SALESMAN                 7698 81/09/08       1500          0         30                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7876 ADAMS                CLERK                    7788 87/05/23       1100                    20                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7900 JAMES                CLERK                    7698 81/12/03        950                    30                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7902 FORD                 ANALYST                  7566 81/12/03       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7934 MILLER               CLERK                    7782 82/01/23       1300                    10                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7499 ALLEN                SALESMAN                 7698 81/02/20       1600        300         30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7521 WARD                 SALESMAN                 7698 81/02/22       1250        500         30                                                                                                                                                                                                                                                                                                                                          
+
+    DEPTNO DNAME                        LOC                             EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                          
+---------- ---------------------------- -------------------------- ---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7566 JONES                MANAGER                  7839 81/04/02       2975                    20                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7654 MARTIN               SALESMAN                 7698 81/09/28       1250       1400         30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7782 CLARK                MANAGER                  7839 81/06/09       2450                    10                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7788 SCOTT                ANALYST                  7566 87/04/19       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7839 KING                 PRESIDENT                     81/11/17       5000                    10                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7844 TURNER               SALESMAN                 7698 81/09/08       1500          0         30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7876 ADAMS                CLERK                    7788 87/05/23       1100                    20                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7900 JAMES                CLERK                    7698 81/12/03        950                    30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7902 FORD                 ANALYST                  7566 81/12/03       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7934 MILLER               CLERK                    7782 82/01/23       1300                    10                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7499 ALLEN                SALESMAN                 7698 81/02/20       1600        300         30                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7521 WARD                 SALESMAN                 7698 81/02/22       1250        500         30                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7566 JONES                MANAGER                  7839 81/04/02       2975                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7654 MARTIN               SALESMAN                 7698 81/09/28       1250       1400         30                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30                                                                                                                                                                                                                                                                                                                                          
+
+    DEPTNO DNAME                        LOC                             EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                          
+---------- ---------------------------- -------------------------- ---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7782 CLARK                MANAGER                  7839 81/06/09       2450                    10                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7788 SCOTT                ANALYST                  7566 87/04/19       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7839 KING                 PRESIDENT                     81/11/17       5000                    10                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7844 TURNER               SALESMAN                 7698 81/09/08       1500          0         30                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7876 ADAMS                CLERK                    7788 87/05/23       1100                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7900 JAMES                CLERK                    7698 81/12/03        950                    30                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7902 FORD                 ANALYST                  7566 81/12/03       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7934 MILLER               CLERK                    7782 82/01/23       1300                    10                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7499 ALLEN                SALESMAN                 7698 81/02/20       1600        300         30                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7521 WARD                 SALESMAN                 7698 81/02/22       1250        500         30                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7566 JONES                MANAGER                  7839 81/04/02       2975                    20                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7654 MARTIN               SALESMAN                 7698 81/09/28       1250       1400         30                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7782 CLARK                MANAGER                  7839 81/06/09       2450                    10                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7788 SCOTT                ANALYST                  7566 87/04/19       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7839 KING                 PRESIDENT                     81/11/17       5000                    10                                                                                                                                                                                                                                                                                                                                          
+
+    DEPTNO DNAME                        LOC                             EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                          
+---------- ---------------------------- -------------------------- ---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7844 TURNER               SALESMAN                 7698 81/09/08       1500          0         30                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7876 ADAMS                CLERK                    7788 87/05/23       1100                    20                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7900 JAMES                CLERK                    7698 81/12/03        950                    30                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7902 FORD                 ANALYST                  7566 81/12/03       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        40 OPERATIONS                   BOSTON                           7934 MILLER               CLERK                    7782 82/01/23       1300                    10                                                                                                                                                                                                                                                                                                                                          
+
+56 rows selected.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  select *
+  2  from dept , emp
+  3* where dept.deptno = emp.deptno
+SQL> /
+
+    DEPTNO DNAME                        LOC                             EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO                                                                                                                                                                                                                                                                                                                                          
+---------- ---------------------------- -------------------------- ---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7369 SMITH                CLERK                    7902 80/12/17        800                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7499 ALLEN                SALESMAN                 7698 81/02/20       1600        300         30                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7521 WARD                 SALESMAN                 7698 81/02/22       1250        500         30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7566 JONES                MANAGER                  7839 81/04/02       2975                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7654 MARTIN               SALESMAN                 7698 81/09/28       1250       1400         30                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7782 CLARK                MANAGER                  7839 81/06/09       2450                    10                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7788 SCOTT                ANALYST                  7566 87/04/19       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7839 KING                 PRESIDENT                     81/11/17       5000                    10                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7844 TURNER               SALESMAN                 7698 81/09/08       1500          0         30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7876 ADAMS                CLERK                    7788 87/05/23       1100                    20                                                                                                                                                                                                                                                                                                                                          
+        30 SALES                        CHICAGO                          7900 JAMES                CLERK                    7698 81/12/03        950                    30                                                                                                                                                                                                                                                                                                                                          
+        20 RESEARCH                     DALLAS                           7902 FORD                 ANALYST                  7566 81/12/03       3000                    20                                                                                                                                                                                                                                                                                                                                          
+        10 ACCOUNTING                   NEW YORK                         7934 MILLER               CLERK                    7782 82/01/23       1300                    10                                                                                                                                                                                                                                                                                                                                          
+
+14 rows selected.
+
+SQL> spool off
