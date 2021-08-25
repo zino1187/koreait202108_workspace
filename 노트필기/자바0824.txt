@@ -1,0 +1,12 @@
+자바 GUI  프로그래밍에서 지원하는 레이아웃의 종류 
+
+1.FlowLayout
+   - 흘러다니는 레이아웃, 윈도우창의 크기에 따라 컴포넌트의 위치가 유동적임..
+2.BorderLayout
+  - 동,서,남,북,센터의 방위를 갖는 레이아웃
+
+3.GridLayout 
+  - 격자모양의 배치 (행, 열) 지정가능
+
+4.GridBagLayout
+5.CardLayout
