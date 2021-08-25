@@ -3,6 +3,8 @@ package com.koreait.project0825.event4;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,11 +12,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class ChatA extends JFrame{
+public class ChatA extends JFrame implements ActionListener{
 	JTextArea area;
 	JScrollPane scroll;
 	JTextField t_input;
 	JButton bt;
+	ChatB chatB;//null
 	
 	public ChatA() {
 		//생성 
@@ -36,9 +39,21 @@ public class ChatA extends JFrame{
 		//윈도우 설정 
 		this.setBounds(200, 100, 300, 400);
 		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		//버튼과 리스너와의 연결 
+		bt.addActionListener(this);
 	}
-	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("눌럿어?");
+		
+		//대화상대방 띄우기
+		if(chatB==null)
+		chatB=new ChatB();
+
+		
+	}
 	public static void main(String[] args) {
 		new ChatA();
 	}
