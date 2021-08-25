@@ -3,17 +3,19 @@ package com.koreait.project0825.event4;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class ChatB extends JFrame{
+public class ChatB extends JFrame implements KeyListener{
 	JTextArea area;
 	JScrollPane scroll;
 	JTextField t_input;
+	ChatA chatA; //null
 	
 	public ChatB() {
 		//생성 
@@ -32,7 +34,29 @@ public class ChatB extends JFrame{
 		
 		//윈도우 설정 
 		this.setBounds(500, 100, 300, 400);
-		setVisible(true);	
+		setVisible(true);
+		
+		//연결~~
+		t_input.addKeyListener(this);
+	}
+	
+	//누군가에 의해 ChatA를 넘겨받을 수 있는  setter메서드 정의 
+	public void setChatA(ChatA chatA) {
+		this.chatA = chatA;
+		System.out.println("넘겨받은 ChatA주소값"+chatA);
+	}
+	
+	public void keyTyped(KeyEvent e) {}
+	public void keyPressed(KeyEvent e) {}
+	
+	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode()==KeyEvent.VK_ENTER) {
+			//chatA의 area에 입력값 대입 
+			String msg=t_input.getText();
+			chatA.area.append(msg+"\n");
+			this.area.append(msg+"\n");
+			t_input.setText("");//초기화(입력한 값 지우기)
+		}
 	}
 
 }
