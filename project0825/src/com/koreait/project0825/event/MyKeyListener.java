@@ -7,13 +7,14 @@ import java.awt.event.KeyListener;
 public class MyKeyListener implements KeyListener{
 
 	public void keyTyped(KeyEvent e) {//타이핑 할때..
-		System.out.println("keyTyped 호출");
+		//System.out.println("keyTyped 호출");
 	}
 	public void keyPressed(KeyEvent e) {//키보드를 누를때 호출...
-		System.out.println("keyPressed 호출");
+		//System.out.println("keyPressed 호출");
 	}
+	
 	public void keyReleased(KeyEvent e) { //키보드를 눌렀다가 뗄때..호출됨
-		System.out.println("keyReleased 호출");
+		System.out.println("keyReleased 호출"+e);
 	}
 
 }

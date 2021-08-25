@@ -23,13 +23,15 @@ public class ClickTest extends JFrame{
 		setSize(300,400);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		
+				
 		MyActionListener listener = new MyActionListener();//리스너 생성
 		bt.addActionListener(listener);//버튼과 리스너 연결!!!
 		
 		MyKeyListener myKeyListener = new MyKeyListener();//리스너 생성 
 		t_input.addKeyListener(myKeyListener);
+		
+		//프레임과 윈도우 리스너 연결 
+		this.addWindowListener(new MyWindowListener());
 	}
 	
 	public static void main(String[] args) {
