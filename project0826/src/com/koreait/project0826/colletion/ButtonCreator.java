@@ -14,6 +14,7 @@ public class ButtonCreator extends JFrame implements ActionListener{
 	JButton bt_create; //버튼 생성하기 용
 	JButton bt_bg;// 모든 버튼의 배경색 변경 용
 	int x=0;
+	JButton bt;
 	
 	public ButtonCreator() {
 		//생성
@@ -45,7 +46,7 @@ public class ButtonCreator extends JFrame implements ActionListener{
 	
 	public void createBtn() {
 		x++;
-		JButton bt= new JButton("버튼"+x);//생성!!
+		bt= new JButton("버튼"+x);//생성!!
 		
 		p_center.add(bt);//센터의 패널에 부착!!
 		//기존에 없었던 컴포넌트에 대한 그래픽을 갱신시키려면  updateUI() 호출 
