@@ -1,7 +1,7 @@
 package com.koreait.project0826.colletion;
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
 
 //객체를 모아서 처리하는데 유용한 객체들을 지원해주는 라이브러리인 컬렉션 프레임웍
 //중 순서가 없는 객체를 처리하는 Set 을 배워보자!!
@@ -18,6 +18,14 @@ public class SetStudy {
 		
 		//순서없이 모여있는 객체를 모두 출력해본다!!!
 		//총 몇개이고, 반복문으로 가져오는 방법
+		//Set은 순서가 없으므로, 반복문등을 이용하여 처리하려면 순서있게 정렬해야 함. 이때 사용되는 객체가 바로 Iterator
+		//Iterator(jdk 5) 이전에는 Enumeration이 사용됨 
+		Iterator it=set.iterator();
+		
+		while(it.hasNext()) {
+			String e = (String)it.next(); //요소를 꺼낸다
+			System.out.println(e);
+		}
 		
 	}
 }
