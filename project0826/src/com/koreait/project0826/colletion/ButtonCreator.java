@@ -14,7 +14,8 @@ public class ButtonCreator extends JFrame implements ActionListener{
 	JButton bt_create; //버튼 생성하기 용
 	JButton bt_bg;// 모든 버튼의 배경색 변경 용
 	int x=0;
-	JButton bt;
+	//자바뿐 아니라 기존의 절차지향 언어에서는 배열 선언시 반드시 그 크기를 미리 명시해야 한다..
+	JButton[] bt=new JButton[5];
 	
 	public ButtonCreator() {
 		//생성
@@ -42,20 +43,23 @@ public class ButtonCreator extends JFrame implements ActionListener{
 		bt_create.addActionListener(this);
 		bt_bg.addActionListener(this);
 		
+		this.setTitle("제발 꼭 20개만 만드세요");
 	}
 	
 	public void createBtn() {
-		x++;
-		bt= new JButton("버튼"+x);//생성!!
-		
-		p_center.add(bt);//센터의 패널에 부착!!
+		bt[x]= new JButton("버튼"+x);//생성!!
+		p_center.add(bt[x]);//센터의 패널에 부착!!
 		//기존에 없었던 컴포넌트에 대한 그래픽을 갱신시키려면  updateUI() 호출 
 		p_center.updateUI();//갱신
+		
+		x++;
 	}
 	
 	public void setBg() {
-		//생성된 모든 버튼의 배경색상을 노란색으로 바꿔보자!! (setBackground(Color.YELLOW)) 
-		
+		//생성된 모든 버튼의 배경색상을 노란색으로 바꿔보자!! (setBackground(Color.YELLOW))
+		for(int i=0;i<bt.length;i++) {
+			bt[i].setBackground(Color.YELLOW);
+		}
 	}
 	
 	//jvm이 이벤트 정보를 아래의 메서드의 매개변수로 전달해줌...(누가, 언제 ...) 
