@@ -15,6 +15,7 @@ public class AnimationApp extends JFrame{
 		this.setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 	}
 	
 	public static void main(String[] args) {
