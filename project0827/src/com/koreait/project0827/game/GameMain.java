@@ -1,5 +1,8 @@
 package com.koreait.project0827.game;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -33,6 +36,24 @@ public class GameMain extends JFrame{
 		setVisible(true);
 		setLocationRelativeTo(null);//화면 정가운데로 위치
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		//이벤트 연결 
+		item[0].addActionListener(new ActionListener() { //게임 시작
+			public void actionPerformed(ActionEvent e) {
+				gamePanel.flag=true;
+			}
+		});
+		item[1].addActionListener(new ActionListener() { //게임 잠시 멈춤 
+			public void actionPerformed(ActionEvent e) {
+				gamePanel.flag=false;
+			}
+		});
+		item[2].addActionListener(new ActionListener() { //프로그램 종료
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0); //프로세스 종료
+			}
+		});
+		
 	}
 	
 	public static void main(String[] args) {
