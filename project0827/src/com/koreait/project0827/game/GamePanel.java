@@ -3,6 +3,8 @@ package com.koreait.project0827.game;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -41,6 +43,36 @@ public class GamePanel extends JPanel{
 			}
 		};
 		gameThread.start();
+		
+		this.setFocusable(true);//프레임에 있는 커서를 현재의 패널로 옮기자 
+		
+		//패널과 리스너와의 연결 : 어댑터라는 리스너..
+		this.addKeyListener(new KeyAdapter() {
+			//키보드 누를때	
+			public void keyPressed(KeyEvent e) {
+				int key=e.getKeyCode();
+				
+				switch(key) {
+					case KeyEvent.VK_LEFT:hero.velX=-5 ;break; 
+					case KeyEvent.VK_RIGHT:hero.velX=5;break; 
+					case KeyEvent.VK_UP:hero.velY=-5  ;break; 
+					case KeyEvent.VK_DOWN: hero.velY=5 ;break; 
+				}
+			}
+			
+			//키보드 뗄때	
+			public void keyReleased(KeyEvent e) {
+				int key=e.getKeyCode();
+				
+				switch(key) {
+				case KeyEvent.VK_LEFT:hero.velX=0 ;break; 
+				case KeyEvent.VK_RIGHT:hero.velX=0;break; 
+				case KeyEvent.VK_UP:hero.velY=0  ;break; 
+				case KeyEvent.VK_DOWN: hero.velY=0 ;break; 
+				}
+			}
+			
+		});
 	}
 	
 	//배경을 생성한다..
@@ -78,7 +110,7 @@ public class GamePanel extends JPanel{
 		for(int i=0;i<imgName.length;i++) {
 			try {
 				BufferedImage buffImg=ImageIO.read(this.getClass().getClassLoader().getResource(imgName[i]));
-				enemy[i]=new Enemy( WIDTH, 100+(i*100), 90, 90, -2, 0, buffImg);
+				enemy[i]=new Enemy( WIDTH, 100+(i*100), 90, 90, -3, 0, buffImg);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -111,6 +143,11 @@ public class GamePanel extends JPanel{
 		//System.out.println("gameLoop() 호출...");
 		repaint();
 	}
+	
+	//인터페이스 구현시, 재정의할 메서드 3개이상 될때, 사용하지도 않는 메서드를 클래스내에 방치하는것은
+	//올바르지 못할것이다..해결책) 3개이상의 구현메서드가 있을대는 sun에서 개발자 대신 인터페이스를 구현해놓은 클래스를 지원하는데,
+	//이 클래스를 가리켜 Adapter(어댑터)라 한다..
+
 }
 
 
