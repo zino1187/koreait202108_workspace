@@ -4,23 +4,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 
 //게임 배경을 제어하기 위해 객체로 정의한다..
-public class GameBg {
-	int x;
-	int y;
-	int velX; //x축으로의 변화량 
-	int velY; //y축으로의 변화량
-	int width;
-	int height;
-	Image image;
+public class GameBg extends GameObject{
 	
 	public GameBg(int x, int y, int width, int height, int velX, int velY, Image image){
-		this.x=x;
-		this.y=y;
-		this.width=width;
-		this.height=height;
-		this.velX=velX;
-		this.velY=velY;
-		this.image=image;
+		super(x, y, width ,height, velX, velY, image);
 	}
 	
 	public void tick() { //물리값 변화시킬 메서드 

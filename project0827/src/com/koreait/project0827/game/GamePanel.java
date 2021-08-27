@@ -17,12 +17,14 @@ public class GamePanel extends JPanel{
 	boolean flag=true;
 	GameBg[] gameBg=new GameBg[2];
 	Hero hero;
+	Enemy[] enemy=new Enemy[5];
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		 
 		createBg();//배경생성
 		createHero();//주인공생성
+		createEnemy();//적군생성
 		
 		gameThread=new Thread(){
 			public void run() {
@@ -70,6 +72,18 @@ public class GamePanel extends JPanel{
 		
 	}
 	
+	public void createEnemy() {
+		String[] imgName= {"e1.png","e2.png","e3.png","e4.png","e5.png"};
+		
+		for(int i=0;i<imgName.length;i++) {
+			try {
+				BufferedImage buffImg=ImageIO.read(this.getClass().getClassLoader().getResource(imgName[i]));
+				enemy[i]=new Enemy( WIDTH, 100+(i*100), 90, 90, -2, 0, buffImg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	
 	//repaint()  --> update()  --> paint();
@@ -85,6 +99,11 @@ public class GamePanel extends JPanel{
 		hero.tick();
 		hero.render(g);
 		
+		//적군 5마리의 tick(), render() 호출 
+		for(int i=0;i<enemy.length;i++) {
+			enemy[i].tick();
+			enemy[i].render(g);
+		}
 	}
 	
 	//게임의 심장역할을 해줄, 게임루프 정의...
