@@ -16,6 +16,7 @@ public class TimerAndCounter extends JFrame{
 	Thread timerThread;
 	int num;
 	
+	
 	public TimerAndCounter() {
 		la_counter = new JLabel("0");
 		la_timer = new JLabel("0");
@@ -29,7 +30,7 @@ public class TimerAndCounter extends JFrame{
 		la_timer.setBackground(Color.PINK);
 		Font font=new Font("Arial black", Font.BOLD, 100);
 		la_counter.setFont(font);
-		la_timer.setFont(font);
+		la_timer.setFont(new Font("Arial black", Font.BOLD, 50));
 		
 		
 		setLayout(new FlowLayout());
@@ -58,13 +59,30 @@ public class TimerAndCounter extends JFrame{
 			}
 		};
 		counterThread.start(); //Runnable 영역으로 밀어넣기!!
+		
+		timerThread = new Thread() {
+			//개발자는 쓰레드로 수행시키고 싶은 독립적 코드를 run() 에 작성하면 된다
+			//이때  run() jvm 이 알아서 수행시켜준다
+			public void run() {
+				while(true) {
+					Calendar cal=Calendar.getInstance();//날짜 객체
+					int hr=cal.get(Calendar.HOUR);//시
+					int min=cal.get(Calendar.MINUTE); //분
+					int sec=cal.get(Calendar.SECOND); //초
+					la_timer.setText(hr+":"+min+":"+sec+" sec");
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		timerThread.start();
 	}
 	
 	public static void main(String[] args) {
 		new TimerAndCounter();
-		Calendar cal=Calendar.getInstance();//날짜 객체
-		int min=cal.get(Calendar.MINUTE); //분
-		int sec=cal.get(Calendar.SECOND); //초
-		System.out.println(min+"분 "+sec+"초");
 	}
 }
