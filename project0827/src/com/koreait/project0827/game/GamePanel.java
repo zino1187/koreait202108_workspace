@@ -16,12 +16,13 @@ public class GamePanel extends JPanel{
 	Thread gameThread;//게임 운영 용 쓰레드정의
 	boolean flag=true;
 	GameBg[] gameBg=new GameBg[2];
+	Hero hero;
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		
-		//배경생성 
-		createBg();
+		 
+		createBg();//배경생성
+		createHero();//주인공생성
 		
 		gameThread=new Thread(){
 			public void run() {
@@ -49,12 +50,28 @@ public class GamePanel extends JPanel{
 		URL url=this.getClass().getClassLoader().getResource("game_bg.jpg");
 		try {//에러가 날 가능성이 있는 코드임..
 			BufferedImage buffImg=ImageIO.read(url);
-			gameBg[0] = new GameBg(0, 0, WIDTH, HEIGHT, 2, 0, buffImg);
+			gameBg[0] = new GameBg(0, 0, WIDTH, HEIGHT, 1, 0, buffImg);
+			gameBg[1] = new GameBg(WIDTH-1, 0, WIDTH, HEIGHT, 1, 0, buffImg);
 			
-		} catch (IOException e) { //혹여나 에러가 나면 비정상적으로 종료하지말고, catch문영역을 수행해...
+		} catch (IOException e) { //혹여나 에러가 나면 비정상적으로 종료하지말고, catch문 영역을 수행해...
 			e.printStackTrace();
 		}
 	}
+	
+	//주인공을 생성한다 
+	public void createHero() {
+		URL url=this.getClass().getClassLoader().getResource("plane.png");
+		try {
+			BufferedImage buffImg=ImageIO.read(url);
+			hero = new Hero(100, 200, 120, 75, 0, 0, buffImg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
 	//repaint()  --> update()  --> paint();
 	protected void paintComponent(Graphics g) {
 		g.setColor(Color.YELLOW);
@@ -62,6 +79,12 @@ public class GamePanel extends JPanel{
 		
 		gameBg[0].tick();
 		gameBg[0].render(g);
+		gameBg[1].tick();
+		gameBg[1].render(g);
+		
+		hero.tick();
+		hero.render(g);
+		
 	}
 	
 	//게임의 심장역할을 해줄, 게임루프 정의...
