@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -17,11 +18,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.plaf.DimensionUIResource;
 
+import com.koreait.common.FileManager;
+
 public class DownLoader extends JFrame implements ActionListener{
 	JTextField t_url; //이미지 경로 
 	JButton bt;
 	URL url;
 	HttpURLConnection httpCon; //웹상의 요청을 시도하는데 사용하는 객체 (브라우저 없이 자바코드에서)
+	InputStream is; //모든 메서드 영역에서 보여야 하므로, 멤버변수로 빼놓자
+	FileOutputStream fos;
+	
 	
 	public DownLoader() {
 		//생성 
@@ -58,7 +64,10 @@ public class DownLoader extends JFrame implements ActionListener{
 			// https://p4.wallpaperbetter.com/wallpaper/226/591/773/ocean-waves-wide-wallpaper-494625-wallpaper-preview.jpg
 			
 			//이시점부터, 웹상의 필요한 자원에 스트림 연결이 가능..
-			InputStream is=httpCon.getInputStream();
+			is=httpCon.getInputStream();
+			 
+			String ext=FileManager.getExt(t_url.getText());//사용자가 입력한 텍스트필드의 값중에서 확장자만 추출
+			fos=new FileOutputStream("D:/koreait2108_workspace/data/wallpater."+ext); //저장할 파일명..
 			
 			//읽기 
 			int data=-1;
@@ -66,12 +75,29 @@ public class DownLoader extends JFrame implements ActionListener{
 				data=is.read();
 				if(data==-1)break;
 				System.out.println(data);
+				fos.write(data);
 			}
-			JOptionPane.showMessageDialog(this , "읽기 완료");	
+			JOptionPane.showMessageDialog(this , "복사 완료");	
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally {
+			//열려있는 스트림은 닫아야 한다!!
+			if(is!=null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(fos!=null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
