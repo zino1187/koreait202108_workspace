@@ -2,10 +2,10 @@ package com.koreait.project0827.game;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 
 //주인공을 정의한다
 public class Hero extends GameObject{
-	
 	public Hero(int x, int y, int width, int height, int velX, int velY, Image image) {
 		super(x, y , width, height, velX, velY, image);
 	}

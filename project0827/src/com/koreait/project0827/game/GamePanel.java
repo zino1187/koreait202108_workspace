@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -20,6 +21,8 @@ public class GamePanel extends JPanel{
 	GameBg[] gameBg=new GameBg[2];
 	Hero hero;
 	Enemy[] enemy=new Enemy[5];
+	ArrayList<Bullet> bulletArray=new ArrayList<Bullet>();//총알 전용 리스트 
+
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -57,6 +60,7 @@ public class GamePanel extends JPanel{
 					case KeyEvent.VK_RIGHT:hero.velX=5;break; 
 					case KeyEvent.VK_UP:hero.velY=-5  ;break; 
 					case KeyEvent.VK_DOWN: hero.velY=5 ;break; 
+					case KeyEvent.VK_SPACE: createBullet();break; 
 				}
 			}
 			
@@ -117,6 +121,20 @@ public class GamePanel extends JPanel{
 		}
 	}
 	
+	//총알을 생성한다
+	public void createBullet() {
+		try {
+			BufferedImage buffImg=ImageIO.read(this.getClass().getClassLoader().getResource("ball.png"));
+			
+			Bullet bullet = new Bullet(hero.x+hero.width, hero.y+hero.height/2, 20, 20, 15, 0, buffImg);
+			
+			bulletArray.add(bullet);//리스트에 담자!!
+			System.out.println("현재까지 누적된 총알 수는 "+bulletArray.size());
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
 	
 	//repaint()  --> update()  --> paint();
 	protected void paintComponent(Graphics g) {
@@ -135,6 +153,13 @@ public class GamePanel extends JPanel{
 		for(int i=0;i<enemy.length;i++) {
 			enemy[i].tick();
 			enemy[i].render(g);
+		}
+		
+		//누적된 총알 모두 의 tick() , render() 
+		for(int i=0; i<bulletArray.size();i++) {
+			Bullet bullet=bulletArray.get(i);//요소 꺼내기	
+			bullet.tick();
+			bullet.render(g);
 		}
 	}
 	
