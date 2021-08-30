@@ -13,6 +13,7 @@ import java.net.URLConnection;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.plaf.DimensionUIResource;
 
@@ -54,9 +55,19 @@ public class DownLoader extends JFrame implements ActionListener{
 			URLConnection con=url.openConnection();
 			httpCon=(HttpURLConnection)con;
 			
+			// https://p4.wallpaperbetter.com/wallpaper/226/591/773/ocean-waves-wide-wallpaper-494625-wallpaper-preview.jpg
+			
 			//이시점부터, 웹상의 필요한 자원에 스트림 연결이 가능..
 			InputStream is=httpCon.getInputStream();
 			
+			//읽기 
+			int data=-1;
+			while(true) {
+				data=is.read();
+				if(data==-1)break;
+				System.out.println(data);
+			}
+			JOptionPane.showMessageDialog(this , "읽기 완료");	
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
