@@ -69,7 +69,7 @@ public class MysqlApp extends JFrame implements ActionListener{
 			System.out.println("드라이버 로드 성공");
 			
 			//접속할때 사용하는 JDBC 객체는 DriverManager 이다!!
-			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/bigdata", "root", "1234");
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/bigdata?useSSL=false&amp;characterEncoding=UTF-8", "root", "1234");
 			if(con !=null) {
 				JOptionPane.showMessageDialog(this, "접속성공");
 				
@@ -89,7 +89,7 @@ public class MysqlApp extends JFrame implements ActionListener{
 		String name_value=book_name.getText(); //입력한 책의 이름
 		int price_value=Integer.parseInt(price.getText());  //String --> int 
 		
-		String sql="insert into book(book_id, book_name, price) values(seq_book.nextval,'"+name_value+"', "+price_value+")";
+		String sql="insert into book(book_name, price) values('"+name_value+"', "+price_value+")";
 		
 		PreparedStatement pstmt=null;//맴버가 아닌 지역변수는 반드시 변수 선언시 초기화되어 잇어야 한다..
 		
