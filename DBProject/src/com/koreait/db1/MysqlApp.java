@@ -16,13 +16,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 //원격지에 떨어진, 오라클 데이터베이스에 DML 작업을 수행해보자!!
-public class BookApp extends JFrame implements ActionListener{
+public class MysqlApp extends JFrame implements ActionListener{
 	JTextField book_name;
 	JTextField price;
 	JButton bt_regist;
 	Connection con; //모든 인스턴스 메서드가 접근할수 있도록 멤버변수로 뺐다!!
 	
-	public BookApp() {
+	public MysqlApp() {
 		//생성 
 		book_name = new JTextField(40);
 		price = new JTextField(40);
@@ -65,11 +65,11 @@ public class BookApp extends JFrame implements ActionListener{
 	public void connect() {
 		//오라클 드라이버를 클래스 로드!! 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");//로드하고 싶은 클래스의 경로..
+			Class.forName("com.mysql.jdbc.Driver");//로드하고 싶은 클래스의 경로..
 			System.out.println("드라이버 로드 성공");
 			
 			//접속할때 사용하는 JDBC 객체는 DriverManager 이다!!
-			con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "batman", "1234");
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/bigdata", "root", "1234");
 			if(con !=null) {
 				JOptionPane.showMessageDialog(this, "접속성공");
 				
@@ -120,7 +120,7 @@ public class BookApp extends JFrame implements ActionListener{
 	}
 	
 	public static void main(String[] args) {
-		new BookApp();
+		new MysqlApp();
 	}
 	
 }
