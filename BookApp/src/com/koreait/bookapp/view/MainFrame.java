@@ -99,6 +99,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			bt.addActionListener(this);
 		}
 		
+		showHide(4);
 	}
 	
 	//페이지 보이고, 않보이게 처리  n의 값은 visible을 true로 놓을 대상 페이지값..
