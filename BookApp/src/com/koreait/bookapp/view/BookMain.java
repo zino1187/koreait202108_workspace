@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -19,7 +20,7 @@ public class BookMain extends Page{
 	JPanel p_west; //서쪽 입력폼 영역 
 	JPanel p_center;//가운데 테이블 영역
 	JPanel p_east; //동쪽 입력폼 영역
-	Choice ch_top; //탑카테고리 
+	JComboBox ch_top; //탑카테고리 
 	Choice ch_sub; //서브카테고리 
 	JTextField t_name;//책이름
 	JTextField t_price;//가격
@@ -36,7 +37,7 @@ public class BookMain extends Page{
 		p_west = new JPanel();
 		p_center = new JPanel();
 		p_east = new JPanel();
-		ch_top=new Choice();
+		ch_top=new JComboBox();
 		ch_sub=new Choice();
 		t_name = new JTextField();
 		t_price = new JTextField();
