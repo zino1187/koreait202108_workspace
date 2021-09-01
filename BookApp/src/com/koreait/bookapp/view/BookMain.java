@@ -1,7 +1,6 @@
 package com.koreait.bookapp.view;
 
 import java.awt.BorderLayout;
-import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -14,6 +13,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.koreait.bookapp.model.SubCategory;
+import com.koreait.bookapp.model.SubCategoryDAO;
 import com.koreait.bookapp.model.TopCategory;
 import com.koreait.bookapp.model.TopCategoryDAO;
 
@@ -31,6 +32,8 @@ public class BookMain extends Page{
 	JButton bt_regist;
 	
 	TopCategoryDAO topCategoryDAO;
+	List<TopCategory> topList;
+	SubCategoryDAO subCategoryDAO;
 	
 	public BookMain(MainFrame mainFrame) {
 		super(mainFrame);
@@ -51,6 +54,7 @@ public class BookMain extends Page{
 		};
 		bt_regist = new JButton("등록");
 		topCategoryDAO = new TopCategoryDAO();
+		subCategoryDAO = new SubCategoryDAO();
 		
 		//스타일 
 		p_west.setPreferredSize(new Dimension(200, 750));
@@ -82,7 +86,19 @@ public class BookMain extends Page{
 		ch_top.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					System.out.println("바꿨어?");
+					int index=ch_top.getSelectedIndex(); //유저가 선택한 콤포박스의 index
+					System.out.println("지금 선택한 콤보박스의 index "+index);
+					
+					TopCategory topCategory=topList.get(index);
+					System.out.println("당신이 선택한 인덱스에서 추출한 vo 는 "+topCategory);
+					
+					List<SubCategory> subList = subCategoryDAO.selectByTopCategory(topCategory.getTopcategory_id());
+					
+					//싹~~~지우고
+				
+					for(SubCategory subCategory : subList) {
+						ch_sub.addItem(subCategory.getName());
+					}
 				}
 			}
 		});
@@ -92,7 +108,7 @@ public class BookMain extends Page{
 	}
 	
 	public void getList() {
-		List<TopCategory> topList=topCategoryDAO.selectAll();
+		topList=topCategoryDAO.selectAll();
 		
 		//탑카테고리에 데이터 채워넣기 
 		for( TopCategory topCategory : topList) {
