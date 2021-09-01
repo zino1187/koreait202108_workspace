@@ -5,11 +5,13 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import com.koreait.bookapp.model.Admin;
 
 //어플리케이션의 메인 윈도우 ( View == 디자인 ) 
 public class MainFrame extends JFrame implements ActionListener{
@@ -31,6 +33,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	ArrayList<Page> pageList;//페이지를 가리킴에 있어 규칙을 만들기 위해
 	
 	//로그인 상태 여부... 
+	Admin loginObj; //null
 	
 	public MainFrame() {
 		//생성 
@@ -114,7 +117,25 @@ public class MainFrame extends JFrame implements ActionListener{
 		JButton btn=(JButton)e.getSource();
 		//System.out.println("지금 누르신 버튼의 리스트 내에서의 위치는 "+btnList.indexOf(btn));
 		int index=btnList.indexOf(btn);
-		showHide(index);
+		
+		if(loginObj==null) {
+			if(index==0 || index==1 || index==3) {
+				JOptionPane.showMessageDialog(this, "로그인이 필요한 서비스입니다");
+			}else { // 2, 4
+				showHide(index);
+			}
+		}else {
+			//로그인한 상태에서 만일 로그아웃 버튼 누르면? 
+			if(index==4) {
+				//로그 아웃 대상
+				loginObj=null;
+				JOptionPane.showMessageDialog(this, "로그아웃 되었습니다");
+				bt_login.setText("Login");
+			}else {
+				showHide(index);
+			}
+		}
+		
 	}
 	
 	public static void main(String[] args) {

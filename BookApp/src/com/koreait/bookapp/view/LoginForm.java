@@ -60,10 +60,14 @@ public class LoginForm extends Page{
 				admin.setPassword(pass);
 				
 				Admin result=adminDAO.select(admin);
+				
 				if(result==null) {
 					JOptionPane.showMessageDialog(getMainFrame(), "로그인 정보가 올바르지 않습니다");
 				}else {
 					JOptionPane.showMessageDialog(getMainFrame(), result.getName()+"님 반값습니다");
+					//기존 로그인 버튼의 제목을 Logout으로 전환 
+					getMainFrame().bt_login.setText("Logout");
+					getMainFrame().loginObj=result;//로그인 결과객체를 프레임 대입
 				}				
 			}
 		});
