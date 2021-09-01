@@ -6,9 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 
 //도서관리 페이지
-public class CSMain extends JPanel{
+public class CSMain extends Page{
 	public CSMain() {
 		setBackground(Color.GREEN);
-		setPreferredSize(new Dimension(1200, 750));
 	}
 }
