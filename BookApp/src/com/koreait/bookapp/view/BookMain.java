@@ -5,13 +5,13 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.koreait.bookapp.model.TopCategory;
 import com.koreait.bookapp.model.TopCategoryDAO;
 
 //도서관리 페이지
@@ -79,8 +79,12 @@ public class BookMain extends Page{
 	}
 	
 	public void getList() {
-		topCategoryDAO.selectAll();
+		List<TopCategory> topList=topCategoryDAO.selectAll();
 		
+		//탑카테고리에 데이터 채워넣기 
+		for( TopCategory topCategory : topList) {
+			ch_top.add(topCategory.getName());
+		}
 	}
 	
 }
