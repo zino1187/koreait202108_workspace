@@ -9,7 +9,8 @@ import javax.swing.JPanel;
 public class Page extends JPanel{
 	private MainFrame mainFrame;
 	
-	public Page() {
+	public Page(MainFrame mainFrame) {
+		this.mainFrame=mainFrame;
 		setPreferredSize(new Dimension(1200, 750));
 	}
 	

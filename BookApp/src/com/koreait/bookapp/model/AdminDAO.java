@@ -13,7 +13,7 @@ public class AdminDAO {
 	String pass="1234";
 	
 	//Admin 테이블에 레코드 넣기!!
-	public int insert() {
+	public int insert(Admin admin) {
 		Connection con=null;
 		PreparedStatement pstmt=null;
 		int result=0;
@@ -30,10 +30,10 @@ public class AdminDAO {
 				pstmt=con.prepareStatement(sql);//쿼리 객체생성
 				
 				//바인드변수에 값 할당하기 바인드변수는 1부터 시작
-				pstmt.setString(1, "superman");
-				pstmt.setString(2, "수퍼맨");
-				pstmt.setString(3, "8888");
-				pstmt.setString(4, "super@naver.com");
+				pstmt.setString(1, admin.getId());
+				pstmt.setString(2, admin.getName());
+				pstmt.setString(3, admin.getPassword());
+				pstmt.setString(4, admin.getEmail());
 				
 				result=pstmt.executeUpdate(); //이 쿼리문에 의해 영향을 받은 레코드 수를 반환
 			}else {

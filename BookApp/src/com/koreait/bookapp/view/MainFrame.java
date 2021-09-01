@@ -30,6 +30,8 @@ public class MainFrame extends JFrame implements ActionListener{
 	ArrayList<JButton> btnList; //버튼을 가리킴에 있어 규칙을 만들기 위해
 	ArrayList<Page> pageList;//페이지를 가리킴에 있어 규칙을 만들기 위해
 	
+	//로그인 상태 여부... 
+	
 	public MainFrame() {
 		//생성 
 		p_north = new JPanel();
@@ -40,17 +42,14 @@ public class MainFrame extends JFrame implements ActionListener{
 		bt_cs =new JButton("고객센터");
 		bt_login =new JButton("Login");
 		
-		bookMain = new BookMain();
-		schedule = new Schedule();
-		memberJoin = new MemberJoin();
-		csMain = new CSMain();
-		loginForm = new LoginForm();
+		bookMain = new BookMain(this);
+		schedule = new Schedule(this);
+		memberJoin = new MemberJoin(this);
+		csMain = new CSMain(this);
+		loginForm = new LoginForm(this);
 		
 		btnList = new ArrayList<JButton>();
 		pageList=new ArrayList();
-		
-		//부모인 Page 객체에 mainFrame 을 전달하자 
-		memberJoin.setMainFrame(this);
 		
 		//버튼을 개성있는 이름이 아닌, 규칙있는 숫자로 가리키기 위해..
 		btnList.add(bt_main);

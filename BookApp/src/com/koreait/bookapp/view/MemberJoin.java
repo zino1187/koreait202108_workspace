@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.koreait.bookapp.model.Admin;
 import com.koreait.bookapp.model.AdminDAO;
 
 //도서관리 페이지
@@ -21,7 +22,8 @@ public class MemberJoin extends Page{
 	JPanel content;//컨텐츠를 감싸 줄 영역
 	AdminDAO adminDAO;
 	
-	public MemberJoin() {
+	public MemberJoin(MainFrame mainFrame) {
+		super(mainFrame);
 		//setBackground(Color.BLUE);
 		//생성 
 		la_id = new JLabel("ID");
@@ -67,7 +69,20 @@ public class MemberJoin extends Page{
 		//이벤트소스와 리스너 연결 
 		bt_regist.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int result=adminDAO.insert();
+				//사용자가 입력한 값을 변수로 받아둠
+				String id=t_id.getText();
+				String name=t_name.getText();
+				String pass=t_pass.getText();
+				String email=t_email.getText();
+				//낱개로 보내지말고, 하나의 객체의 인스턴스에 담아서 전달하자!!! (VO 이용해본다)
+				Admin admin=new Admin();//empty
+				admin.setId(id);
+				admin.setName(name);
+				admin.setPassword(pass);
+				admin.setEmail(email);
+				
+				int result=adminDAO.insert(admin); //VO로 전달!!
+				
 				if(result==1) {
 					JOptionPane.showMessageDialog(getMainFrame(), "회원가입 성공");
 				}else {
