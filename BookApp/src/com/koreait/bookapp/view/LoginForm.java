@@ -2,6 +2,8 @@ package com.koreait.bookapp.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -26,13 +28,33 @@ public class LoginForm extends Page{
 		content = new JPanel();
 		
 		//스타일
-		Dimension d = new Dimension(500,230);
-		content.setBackground(Color.YELLOW);
-		content.setPreferredSize(new Dimension(getPreferredSize()));
+		Dimension d = new Dimension(480,40);
+		t_id.setPreferredSize(d);
+		t_pass.setPreferredSize(d);
 		
+		content.setBackground(Color.YELLOW);
+		content.setPreferredSize(new Dimension(500, 230));
+		
+		//조립 
+		content.add(t_id);
+		content.add(t_pass);
+		content.add(bt_login);
+		
+		add(content);
+		
+		bt_login.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		
 	}
 }
+
+
+
+
+
 
 
 

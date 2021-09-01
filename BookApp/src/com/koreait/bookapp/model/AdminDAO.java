@@ -3,9 +3,10 @@ package com.koreait.bookapp.model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-//DAO( Data Access Object  : 오직 Create (insert), Read(select ), Update Delte 
+//DAO( Data Access Object  : 오직 Create (insert), Read(select ), Update delete 
 //작업만을 수행하는 모델 객체) 
 public class AdminDAO {
 	String url="jdbc:oracle:thin:@localhost:1521:XE"; // jdbc:mysql://localhost:3306/bigdata
@@ -61,9 +62,85 @@ public class AdminDAO {
 			}
 		}
 		return result;
+	}
+
+	
+	//존재하는 회원인지 여부 처리 메서드 ( 로그인 처리) 
+	public void select(Admin admin) {
+		Connection con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver"); //드라이버 로드
+			con=DriverManager.getConnection(url, user, pass);
+			
+			if(con!=null) {
+				System.out.println("접속성공");
+				String sql="select * from admin where id=? and pass=?";
+				pstmt=con.prepareStatement(sql);//쿼리수행 객체 얻기
+				pstmt.setString(1, admin.getId()); //vo에 들어있는 id값
+				pstmt.setString(2, admin.getPassword());//vo에 들어있는 paasword값
+				
+				rs=pstmt.executeQuery(); //select문 수행후 그 결과를  ResultSet 으로 받음
+				
+				if(rs.next()) {
+					System.out.println("레코드가 존재하므로, 로그인 성공");
+				}else {
+					System.out.println("레코드가 존재하지 않으므로, 실패");
+				}				
+			}else {
+				System.out.println("접속실패");
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			if(rs !=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(pstmt !=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if(con !=null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
 		
 	}
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
