@@ -1,16 +1,24 @@
 package com.koreait.bookapp.view;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.koreait.bookapp.model.AdminDAO;
 
 //도서관리 페이지
 public class MemberJoin extends Page{
 	JLabel la_id, la_pass, la_name,la_email;
 	JTextField t_id, t_pass, t_name, t_email;
+	JButton bt_regist;
+	
 	JPanel content;//컨텐츠를 감싸 줄 영역
+	AdminDAO adminDAO;
 	
 	public MemberJoin() {
 		//setBackground(Color.BLUE);
@@ -24,8 +32,10 @@ public class MemberJoin extends Page{
 		t_pass = new JTextField();
 		t_name = new JTextField();
 		t_email = new JTextField();
+		bt_regist = new JButton("회원가입");
 		
 		content = new JPanel();
+		adminDAO = new AdminDAO();
 		
 		//스타일 
 		Dimension d = new Dimension(400,40);
@@ -48,11 +58,31 @@ public class MemberJoin extends Page{
 		content.add(t_name);
 		content.add(la_email);
 		content.add(t_email);
+		content.add(bt_regist);
 		
 		content.setPreferredSize(new Dimension(830, 300));
 		add(content);
+		
+		//이벤트소스와 리스너 연결 
+		bt_regist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adminDAO.insert();
+			}
+		});
+		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
