@@ -5,6 +5,8 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -21,7 +23,7 @@ public class BookMain extends Page{
 	JPanel p_center;//가운데 테이블 영역
 	JPanel p_east; //동쪽 입력폼 영역
 	JComboBox ch_top; //탑카테고리 
-	Choice ch_sub; //서브카테고리 
+	JComboBox ch_sub; //서브카테고리 
 	JTextField t_name;//책이름
 	JTextField t_price;//가격
 	JButton bt_img; //탐색기 창 띄우기
@@ -38,7 +40,7 @@ public class BookMain extends Page{
 		p_center = new JPanel();
 		p_east = new JPanel();
 		ch_top=new JComboBox();
-		ch_sub=new Choice();
+		ch_sub=new JComboBox();
 		t_name = new JTextField();
 		t_price = new JTextField();
 		bt_img = new JButton("이미지 찾기");
@@ -76,6 +78,16 @@ public class BookMain extends Page{
 		//서쪽영역에 등록폼 부착 
 		add(p_west, BorderLayout.WEST);
 		
+		//콤보박스에 리스너 연결 
+		ch_top.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					System.out.println("바꿨어?");
+				}
+			}
+		});
+		
+		
 		getList();
 	}
 	
@@ -84,7 +96,7 @@ public class BookMain extends Page{
 		
 		//탑카테고리에 데이터 채워넣기 
 		for( TopCategory topCategory : topList) {
-			ch_top.add(topCategory.getName());
+			ch_top.addItem(topCategory.getName());
 		}
 	}
 	
