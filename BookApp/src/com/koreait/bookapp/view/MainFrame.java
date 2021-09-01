@@ -49,6 +49,9 @@ public class MainFrame extends JFrame implements ActionListener{
 		btnList = new ArrayList<JButton>();
 		pageList=new ArrayList();
 		
+		//부모인 Page 객체에 mainFrame 을 전달하자 
+		memberJoin.setMainFrame(this);
+		
 		//버튼을 개성있는 이름이 아닌, 규칙있는 숫자로 가리키기 위해..
 		btnList.add(bt_main);
 		btnList.add(bt_schedule);

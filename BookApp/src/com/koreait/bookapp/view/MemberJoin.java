@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -66,7 +67,12 @@ public class MemberJoin extends Page{
 		//이벤트소스와 리스너 연결 
 		bt_regist.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				adminDAO.insert();
+				int result=adminDAO.insert();
+				if(result==1) {
+					JOptionPane.showMessageDialog(getMainFrame(), "회원가입 성공");
+				}else {
+					JOptionPane.showMessageDialog(getMainFrame(), "등록실패");
+				}
 			}
 		});
 		
