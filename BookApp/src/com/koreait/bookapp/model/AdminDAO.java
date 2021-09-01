@@ -66,10 +66,11 @@ public class AdminDAO {
 
 	
 	//존재하는 회원인지 여부 처리 메서드 ( 로그인 처리) 
-	public void select(Admin admin) {
+	public Admin select(Admin admin) {
 		Connection con=null;
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
+		Admin vo=null; //반환하기 위해
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver"); //드라이버 로드
@@ -86,6 +87,14 @@ public class AdminDAO {
 				
 				if(rs.next()) {
 					System.out.println("레코드가 존재하므로, 로그인 성공");
+					//로그인에 성공하면, 어플리케이션은 해당 회원의 정보를 언제든 출력하거나, 수정할 수 있게 해줘야 한다..
+					//따라서 이 메서드으 반환형으로 회원정보를 반환해주자!!
+					vo = new Admin(); //empty 인스턴스 생성
+					vo.setAdmin_id(rs.getInt("admin_id")); //pk 담았슴
+					vo.setId(rs.getString("id"));//아이디 담기
+					vo.setPassword(rs.getString("pass"));//비번 담기
+					vo.setName(rs.getString("name")); //이름 담기
+					vo.setEmail(rs.getString("email"));//이메일담기
 				}else {
 					System.out.println("레코드가 존재하지 않으므로, 실패");
 				}				
@@ -121,7 +130,7 @@ public class AdminDAO {
 			}
 			
 		}
-		
+		return vo;// 객체반환
 	}
 	
 }

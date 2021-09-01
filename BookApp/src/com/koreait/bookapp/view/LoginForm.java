@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -58,7 +59,12 @@ public class LoginForm extends Page{
 				admin.setId(id);
 				admin.setPassword(pass);
 				
-				adminDAO.select(admin);
+				Admin result=adminDAO.select(admin);
+				if(result==null) {
+					JOptionPane.showMessageDialog(getMainFrame(), "로그인 정보가 올바르지 않습니다");
+				}else {
+					JOptionPane.showMessageDialog(getMainFrame(), result.getName()+"님 반값습니다");
+				}				
 			}
 		});
 		
